@@ -41,6 +41,29 @@ export const getFightById = async (
   return fight;
 };
 
+export const getFightsByFighterName = async (
+  jwt: string,
+  fighterName: string
+): Promise<Fight[] | void> => {
+  const fight: Fight[] | void = await axios
+    .get(`${API_URL}/find`, {
+      params: {
+        fighterName,
+      },
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    })
+    .then(response => {
+      const result: Fight[] = response.data;
+      return result;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  return fight;
+};
+
 export const saveFight = async (
   jwt: string,
   {winner, loser, turns}: Fight

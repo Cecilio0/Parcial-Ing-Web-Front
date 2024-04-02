@@ -1,4 +1,4 @@
-import {getFights} from './helpers/fight.helper';
+import {getFightsByFighterName, getFights} from './helpers/fight.helper';
 import {authenticate, register} from './helpers/jwt.helper';
 import Fight from './interfaces/fight/Fight.interface';
 import Turn from './interfaces/fight/Turn.interface';
@@ -10,11 +10,11 @@ const main = async (): Promise<void> => {
   });
 
   if (typeof jwt == 'string') {
-    const message: Fight[] | void = await getFights(jwt);
+    const message: Fight[] | void = await getFightsByFighterName(jwt, 'Örjan');
     if (message != undefined) {
       message.forEach((fight: Fight, index: number) => {
         console.log(
-          `Fight #${index} (Between ${fight.winner.name} and ${fight.loser.name}):`
+          `Fight #${index + 1} (Between ${fight.winner.name} and ${fight.loser.name}):`
         );
 
         fight.turns.forEach((turn: Turn) => {

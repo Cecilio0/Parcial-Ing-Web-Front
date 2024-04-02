@@ -1,4 +1,4 @@
-import {getFight, saveFight} from './helpers/fight.helper';
+import {getFightById, saveFight} from './helpers/fight.helper';
 import {
   getFighterNames,
   getFighters,
@@ -9,7 +9,7 @@ import {authenticate} from './helpers/jwt.helper';
 import Fight from './interfaces/fight/Fight.interface';
 import Turn from './interfaces/fight/Turn.interface';
 import Fighter from './interfaces/fighter/Fighter.interface';
-import {getRandomInt} from './utils/utils';
+import {getRandomInt, getTwoDistinctRandomIntegers} from './utils/utils';
 
 const simulateFight = async (
   jwt: string,
@@ -18,9 +18,6 @@ const simulateFight = async (
 ): Promise<Fight | void> => {
   const fighter1: Fighter | void = await getFighterById(jwt, idFighter1);
   const fighter2: Fighter | void = await getFighterById(jwt, idFighter2);
-
-  console.log(fighter1);
-  console.log(fighter2);
 
   if (
     fighter1 == undefined ||
@@ -134,13 +131,30 @@ const main = async (): Promise<void> => {
     password: 'password',
   });
 
-  if (typeof jwt == 'string') {
-    const fight: Fight | void = await simulateFight(jwt, 1, 10);
-
-    if (fight != undefined) {
-      await saveFight(jwt, fight);
-    }
+  if (typeof jwt != 'string') {
+    return;
   }
+
+  const names: string[] | void = await getFighterNames(jwt);
+
+  if (typeof names != 'object') {
+    return;
+  }
+
+  const indexes: [number, number] = getTwoDistinctRandomIntegers(
+    0,
+    names.length - 1
+  );
+
+  console.log(indexes);
+
+  const fight: Fight | void = await simulateFight(jwt, indexes[0], indexes[1]);
+
+  if (typeof fight != 'object') {
+    return;
+  }
+
+  await saveFight(jwt, fight);
 };
 
 main();
