@@ -13,11 +13,11 @@ import {getRandomInt, getTwoDistinctRandomIntegers} from './utils/utils';
 
 const simulateFight = async (
   jwt: string,
-  idFighter1: number,
-  idFighter2: number
+  nameFighter1: string,
+  nameFighter2: string
 ): Promise<Fight | void> => {
-  const fighter1: Fighter | void = await getFighterById(jwt, idFighter1);
-  const fighter2: Fighter | void = await getFighterById(jwt, idFighter2);
+  const fighter1: Fighter | void = await getFighterByName(jwt, nameFighter1);
+  const fighter2: Fighter | void = await getFighterByName(jwt, nameFighter2);
 
   if (
     fighter1 == undefined ||
@@ -57,10 +57,10 @@ const simulateFight = async (
   );
 
   const mainAttribute2: number = <number>(
-    fighter1[fighter2.baseClass.mainAttribute as keyof typeof fighter2]
+    fighter2[fighter2.baseClass.mainAttribute as keyof typeof fighter2]
   );
   const secondaryAttribute2: number = <number>(
-    fighter1[fighter2.baseClass.secondaryAttribute as keyof typeof fighter2]
+    fighter2[fighter2.baseClass.secondaryAttribute as keyof typeof fighter2]
   );
 
   let turns: Turn[] = [];
@@ -148,7 +148,11 @@ const main = async (): Promise<void> => {
 
   console.log(indexes);
 
-  const fight: Fight | void = await simulateFight(jwt, indexes[0], indexes[1]);
+  const fight: Fight | void = await simulateFight(
+    jwt,
+    names[indexes[0]],
+    names[indexes[1]]
+  );
 
   if (typeof fight != 'object') {
     return;

@@ -10,7 +10,7 @@ const main = async (): Promise<void> => {
   });
 
   if (typeof jwt == 'string') {
-    const message: Fight[] | void = await getFightsByFighterName(jwt, 'Örjan');
+    const message: Fight[] | void = await getFights(jwt);
     if (message != undefined) {
       message.forEach((fight: Fight, index: number) => {
         console.log(
